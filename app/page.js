@@ -20,8 +20,8 @@ export default function Home() {
 
     setEditorWidth(100);
 
-    if (bottomDivHeight > 10) {
-      setBottomDivHeight(10);
+    if (bottomDivHeight > 20) {
+      setBottomDivHeight(20);
     }
     if (editorWidth === 100) {
       setEditorWidth(50);
@@ -35,8 +35,8 @@ export default function Home() {
 
     setEditorWidth(0);
 
-    if (bottomDivHeight > 10) {
-      setBottomDivHeight(10);
+    if (bottomDivHeight > 20) {
+      setBottomDivHeight(20);
     }
 
     if (editorWidth === 0) {
