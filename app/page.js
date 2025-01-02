@@ -51,7 +51,7 @@ export default function Home() {
 
     setBottomDivHeight(100);
     if (bottomDivHeight === 100) {
-      setBottomDivHeight(10);
+      setBottomDivHeight(20);
     }
 
     setTimeout(() => setIsTransitioning(false), 100);
