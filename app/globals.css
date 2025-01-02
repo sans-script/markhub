@@ -1,0 +1,31 @@
+body{
+    margin: 0;
+    overflow-y: hidden;
+}
+
+pre{
+    background-color: white;
+}
+/* Scrollbar personalizado */
+/* ::-webkit-scrollbar {
+    width: 12px; 
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #444; 
+    border-radius: 6px;
+
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555; 
+}
+
+::-webkit-scrollbar-track {
+    background-color: #222; 
+    border-radius: 6px; 
+}
+
+::-webkit-scrollbar-track:hover {
+    background-color: #333; 
+} */
