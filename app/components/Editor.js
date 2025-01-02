@@ -10,6 +10,7 @@ const Editor = ({
   isTransitioning,
 }) => {
   const editorRef = useRef(null);
+
   const handleResizeSide = (e) => {
     e.preventDefault();
 
@@ -34,6 +35,28 @@ const Editor = ({
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
   };
+
+  const handleResizeSideTouch = (e) => {
+    e.preventDefault();
+    const startX = e.touches[0].clientX;
+    const startWidth = editorRef.current.offsetWidth;
+
+    const onTouchMove = (e) => {
+      const newWidth = startWidth + (e.touches[0].clientX - startX);
+      const percentage = (newWidth / window.innerWidth) * 100;
+      setEditorWidth(percentage);
+    };
+
+    const onTouchEnd = () => {
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("touchend", onTouchEnd);
+      document.body.style.cursor = "default";
+    };
+
+    document.addEventListener("touchmove", onTouchMove);
+    document.addEventListener("touchend", onTouchEnd);
+  };
+
   return (
     <div
       ref={editorRef}
@@ -87,6 +110,7 @@ const Editor = ({
       {/* Resize Handle */}
       <div
         onMouseDown={handleResizeSide}
+        onTouchStart={handleResizeSideTouch}
         style={{
           position: "absolute",
           top: 0,

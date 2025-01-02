@@ -11,67 +11,9 @@ import "github-markdown-css";
 export default function Home() {
   const [input, setInput] = useState("");
   const [editorWidth, setEditorWidth] = useState(50);
-  const [bottomDivHeight, setBottomDivHeight] = useState(10);
+  const [bottomDivHeight, setBottomDivHeight] = useState(20);
   const [prompt, setPrompt] = useState("");
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const editorRef = useRef(null);
-  const bottomDivRef = useRef(null);
-
-  const handleResizeSide = (e) => {
-    e.preventDefault();
-
-    const startX = e.clientX;
-    const startWidth = editorRef.current.offsetWidth;
-
-    document.body.style.cursor = "ew-resize";
-
-    const onMouseMove = (e) => {
-      const newWidth = startWidth + (e.clientX - startX);
-      const percentage = (newWidth / window.innerWidth) * 100;
-
-      setEditorWidth(percentage);
-    };
-
-    const onMouseUp = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-
-      document.body.style.cursor = "default";
-    };
-
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
-  };
-
-  const handleResizeBottom = (e) => {
-    e.preventDefault();
-
-    const totalHeight = window.innerHeight;
-    const startY = e.clientY;
-    const startHeight = bottomDivRef.current.offsetHeight;
-
-    document.body.style.cursor = "ns-resize";
-
-    const onMouseMove = (e) => {
-      const newHeight = startHeight + (startY - e.clientY);
-      const percentage = (newHeight / totalHeight) * 100;
-
-      if (percentage >= 0 && percentage <= 100) {
-        setBottomDivHeight(percentage);
-      }
-    };
-
-    const onMouseUp = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-
-      // Restaurar o cursor para o padrão
-      document.body.style.cursor = "default";
-    };
-
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
-  };
 
   const toggleEditor = () => {
     setIsTransitioning(true);
@@ -177,7 +119,6 @@ export default function Home() {
     }
   };
 
-
   useEffect(() => {
     const observer = new MutationObserver(() => {
       document.querySelectorAll("pre").forEach((element) => {
@@ -229,7 +170,6 @@ export default function Home() {
         <Editor
           input={input}
           setInput={setInput}
-          handleResizeSide={handleResizeSide}
           bottomDivHeight={bottomDivHeight}
           editorWidth={editorWidth}
           isTransitioning={isTransitioning}
@@ -249,9 +189,8 @@ export default function Home() {
           prompt={prompt}
           setPrompt={setPrompt}
           bottomDivHeight={bottomDivHeight}
+          setBottomDivHeight={setBottomDivHeight}
           isTransitioning={isTransitioning}
-          bottomDivRef={bottomDivRef}
-          handleResizeBottom={handleResizeBottom}
         />
       </div>
     </div>

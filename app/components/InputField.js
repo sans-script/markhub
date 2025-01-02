@@ -1,16 +1,72 @@
-import React from "react";
+import React, { useRef } from "react";
 
 const InputField = ({
   prompt,
   setPrompt,
   bottomDivHeight,
+  setBottomDivHeight,
   isTransitioning,
-  bottomDivRef,
-  handleResizeBottom,
 }) => {
+  const bottomDivRef = useRef(null);
+
+  const handleResizeBottom = (e) => {
+    e.preventDefault();
+
+    const totalHeight = window.innerHeight;
+    const startY = e.clientY;
+    const startHeight = bottomDivRef.current.offsetHeight;
+
+    document.body.style.cursor = "ns-resize";
+
+    const onMouseMove = (e) => {
+      const newHeight = startHeight + (startY - e.clientY);
+      const percentage = (newHeight / totalHeight) * 100;
+
+      if (percentage >= 0 && percentage <= 100) {
+        setBottomDivHeight(percentage);
+      }
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+      document.body.style.cursor = "default";
+    };
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  };
+
+  const handleResizeBottomTouch = (e) => {
+    e.preventDefault();
+
+    const totalHeight = window.innerHeight;
+    const startY = e.touches[0].clientY;
+    const startHeight = bottomDivRef.current.offsetHeight;
+
+    const onTouchMove = (e) => {
+      const newHeight = startHeight + (startY - e.touches[0].clientY);
+      const percentage = (newHeight / totalHeight) * 100;
+
+      if (percentage >= 0 && percentage <= 100) {
+        setBottomDivHeight(percentage);
+      }
+    };
+
+    const onTouchEnd = () => {
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("touchend", onTouchEnd);
+      document.body.style.cursor = "default";
+    };
+
+    document.addEventListener("touchmove", onTouchMove);
+    document.addEventListener("touchend", onTouchEnd);
+  };
+
   const handleChange = (e) => {
     setPrompt(e.target.value);
   };
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && e.ctrlKey) {
       e.preventDefault();
@@ -67,6 +123,7 @@ const InputField = ({
 
         <div
           onMouseDown={handleResizeBottom}
+          onTouchStart={handleResizeBottomTouch}
           style={{
             position: "absolute",
             top: 0,
