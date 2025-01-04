@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 const InputField = ({
   prompt,
@@ -8,6 +8,7 @@ const InputField = ({
   isTransitioning,
 }) => {
   const bottomDivRef = useRef(null);
+  const [isResizing, setisResizing] = useState();
 
   const handleResizeBottom = (e) => {
     e.preventDefault();
@@ -19,6 +20,7 @@ const InputField = ({
     document.body.style.cursor = "ns-resize";
 
     const onMouseMove = (e) => {
+      setisResizing(true);
       const newHeight = startHeight + (startY - e.clientY);
       const percentage = (newHeight / totalHeight) * 100;
 
@@ -28,6 +30,7 @@ const InputField = ({
     };
 
     const onMouseUp = () => {
+      setisResizing(false);
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
       document.body.style.cursor = "default";
@@ -44,7 +47,10 @@ const InputField = ({
     const startY = e.touches[0].clientY;
     const startHeight = bottomDivRef.current.offsetHeight;
 
+    document.body.style.cursor = "ns-resize";
+
     const onTouchMove = (e) => {
+      setisResizing(true);
       const newHeight = startHeight + (startY - e.touches[0].clientY);
       const percentage = (newHeight / totalHeight) * 100;
 
@@ -54,6 +60,7 @@ const InputField = ({
     };
 
     const onTouchEnd = () => {
+      setisResizing(false);
       document.removeEventListener("touchmove", onTouchMove);
       document.removeEventListener("touchend", onTouchEnd);
       document.body.style.cursor = "default";
@@ -122,16 +129,24 @@ const InputField = ({
         ></textarea>
 
         <div
+          id="resize-handle-bottom"
           onMouseDown={handleResizeBottom}
           onTouchStart={handleResizeBottomTouch}
+          onMouseEnter={() => {
+            setisResizing(true);
+          }}
+          onMouseLeave={() => {
+            setisResizing(false);
+          }}
           style={{
             position: "absolute",
             top: 0,
             left: 0,
             right: 0,
-            height: "1.5px",
+            height: "4px",
             cursor: "ns-resize",
-            backgroundColor: "#2D2F34",
+            backgroundColor: isResizing ? "#4D4F54" : "transparent",
+            transition: "background-color 0.3s ease",
           }}
         ></div>
       </div>

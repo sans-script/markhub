@@ -4,6 +4,7 @@ const Menu = ({
   toggleEditor,
   togglePreview,
   toggleInput,
+  toggleSidebar,
   saveAsMarkdown,
   openMarkdownFile,
 }) => {
@@ -83,6 +84,18 @@ const Menu = ({
         onMouseLeave={(e) => (e.target.style.color = "inherit")}
       >
         Input
+      </p>
+      <p
+        style={{
+          fontSize: "12px",
+          cursor: "pointer",
+          transition: "color 0.3s",
+        }}
+        onClick={toggleSidebar}
+        onMouseEnter={(e) => (e.target.style.color = "#007bff")}
+        onMouseLeave={(e) => (e.target.style.color = "inherit")}
+      >
+        Sidebar
       </p>
     </div>
   );

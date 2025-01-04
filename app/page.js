@@ -7,11 +7,13 @@ import Preview from "./components/Preview";
 import InputField from "./components/InputField";
 import "highlight.js/styles/github-dark.css";
 import "github-markdown-css";
+import Sidebar from "./components/Sidebar";
 
 export default function Home() {
   const [input, setInput] = useState("");
   const [editorWidth, setEditorWidth] = useState(50);
   const [bottomDivHeight, setBottomDivHeight] = useState(20);
+  const [sidebarWidth, setSidebarWidth] = useState(3);
   const [prompt, setPrompt] = useState("");
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -54,6 +56,15 @@ export default function Home() {
       setBottomDivHeight(20);
     }
 
+    setTimeout(() => setIsTransitioning(false), 100);
+  };
+
+  const toggleSidebar = () => {
+    setIsTransitioning(true);
+    setSidebarWidth(3);
+    if (sidebarWidth === 3) {
+      setSidebarWidth(20);
+    }
     setTimeout(() => setIsTransitioning(false), 100);
   };
 
@@ -151,47 +162,67 @@ export default function Home() {
         toggleEditor={toggleEditor}
         togglePreview={togglePreview}
         toggleInput={toggleInput}
+        toggleSidebar={toggleSidebar}
         saveAsMarkdown={saveAsMarkdown}
         openMarkdownFile={openMarkdownFile}
       />
 
-      {/* Editor e Preview Container */}
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          height: "100vh",
+          height: "100%",
           width: "100%",
           overflow: "hidden",
           position: "relative",
         }}
       >
-        {/* Monaco Editor Box */}
-        <Editor
-          input={input}
-          setInput={setInput}
-          bottomDivHeight={bottomDivHeight}
-          editorWidth={editorWidth}
-          isTransitioning={isTransitioning}
-          setEditorWidth={setEditorWidth}
-        />
-
-        {/* Preview Container*/}
-        <Preview
-          input={input}
-          editorWidth={editorWidth}
-          bottomDivHeight={bottomDivHeight}
+        {/* Sidebar */}
+        <Sidebar
+          sidebarWidth={sidebarWidth}
+          setSidebarWidth={setSidebarWidth}
           isTransitioning={isTransitioning}
         />
 
-        {/* Input Field */}
-        <InputField
-          prompt={prompt}
-          setPrompt={setPrompt}
-          bottomDivHeight={bottomDivHeight}
-          setBottomDivHeight={setBottomDivHeight}
-          isTransitioning={isTransitioning}
-        />
+        {/* Main Content */}
+        <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+          <div
+            style={{
+              display: "flex",
+              height: "100%",
+              width: "100%",
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
+            {/* Monaco Editor Box */}
+            <Editor
+              input={input}
+              setInput={setInput}
+              bottomDivHeight={bottomDivHeight}
+              editorWidth={editorWidth}
+              isTransitioning={isTransitioning}
+              setEditorWidth={setEditorWidth}
+              sidebarWidth={sidebarWidth}
+            />
+
+            {/* Preview Container */}
+            <Preview
+              input={input}
+              editorWidth={editorWidth}
+              bottomDivHeight={bottomDivHeight}
+              isTransitioning={isTransitioning}
+            />
+          </div>
+
+          {/* Input Field */}
+          <InputField
+            prompt={prompt}
+            setPrompt={setPrompt}
+            bottomDivHeight={bottomDivHeight}
+            setBottomDivHeight={setBottomDivHeight}
+            isTransitioning={isTransitioning}
+          />
+        </div>
       </div>
     </div>
   );

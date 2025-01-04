@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
 
 const Editor = ({
@@ -8,25 +8,34 @@ const Editor = ({
   editorWidth,
   setEditorWidth,
   isTransitioning,
+  sidebarWidth,
 }) => {
-  const editorRef = useRef(null);
+  const editorDivRef = useRef(null);
+  const [isResizing, setisResizing] = useState();
 
   const handleResizeSide = (e) => {
     e.preventDefault();
 
     const startX = e.clientX;
-    const startWidth = editorRef.current.offsetWidth;
+    const startWidth = editorDivRef.current.offsetWidth;
+    const sidebarWidthPx = (sidebarWidth / 100) * window.innerWidth;
 
     document.body.style.cursor = "ew-resize";
 
     const onMouseMove = (e) => {
+      setisResizing(true);
       const newWidth = startWidth + (e.clientX - startX);
-      const percentage = (newWidth / window.innerWidth) * 100;
 
-      setEditorWidth(percentage);
+      const percentage =
+        (newWidth / (window.innerWidth - sidebarWidthPx)) * 100;
+
+      if (percentage >= 10 && percentage <= 90) {
+        setEditorWidth(percentage);
+      }
     };
 
     const onMouseUp = () => {
+      setisResizing(false);
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
       document.body.style.cursor = "default";
@@ -38,19 +47,28 @@ const Editor = ({
 
   const handleResizeSideTouch = (e) => {
     e.preventDefault();
+
     const startX = e.touches[0].clientX;
-    const startWidth = editorRef.current.offsetWidth;
+    const startWidth = editorDivRef.current.offsetWidth;
+    const sidebarWidthPx = (sidebarWidth / 100) * window.innerWidth;
+
+    document.body.style.cursor = "ew-resize";
 
     const onTouchMove = (e) => {
       const newWidth = startWidth + (e.touches[0].clientX - startX);
-      const percentage = (newWidth / window.innerWidth) * 100;
-      setEditorWidth(percentage);
+      const percentage =
+        (newWidth / (window.innerWidth - sidebarWidthPx)) * 100;
+
+      if (percentage >= 10 && percentage <= 90) {
+        setEditorWidth(percentage);
+      }
     };
 
     const onTouchEnd = () => {
       document.removeEventListener("touchmove", onTouchMove);
       document.removeEventListener("touchend", onTouchEnd);
       document.body.style.cursor = "default";
+      updateHandleColor();
     };
 
     document.addEventListener("touchmove", onTouchMove);
@@ -59,7 +77,7 @@ const Editor = ({
 
   return (
     <div
-      ref={editorRef}
+      ref={editorDivRef}
       style={{
         width: `${editorWidth}%`,
         height: `${100 - bottomDivHeight}%`,
@@ -109,16 +127,24 @@ const Editor = ({
       />
       {/* Resize Handle */}
       <div
+        id="resize-handle-editor"
         onMouseDown={handleResizeSide}
         onTouchStart={handleResizeSideTouch}
+        onMouseEnter={() => {
+          setisResizing(true);
+        }}
+        onMouseLeave={() => {
+          setisResizing(false);
+        }}
         style={{
           position: "absolute",
           top: 0,
-          right: 0,
+          right: 12,
           bottom: 0,
-          width: "1.5px",
+          width: "4px",
           cursor: "ew-resize",
-          backgroundColor: "#2D2F34",
+          backgroundColor: isResizing ? "#4D4F54" : "transparent",
+          transition: "background-color 0.3s ease",
         }}
       ></div>
     </div>
