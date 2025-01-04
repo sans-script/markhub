@@ -75,7 +75,7 @@ const InputField = ({
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && e.ctrlKey) {
+    if (e.key === "Enter" && e.shiftKey) {
       e.preventDefault();
       if (prompt.trim() === "") {
         return;
@@ -104,7 +104,7 @@ const InputField = ({
         }}
       >
         <textarea
-          placeholder="Type your prompt here and press Ctrl + Enter to send..."
+          placeholder="Type your prompt here and press Shift + Enter to send..."
           value={prompt}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
@@ -131,11 +131,17 @@ const InputField = ({
         <div
           id="resize-handle-bottom"
           onMouseDown={handleResizeBottom}
-          onTouchStart={handleResizeBottomTouch}
+          onTouchStart={(e) => {
+            handleResizeBottomTouch(e);
+            setisResizing(true);
+          }}
           onMouseEnter={() => {
             setisResizing(true);
           }}
           onMouseLeave={() => {
+            setisResizing(false);
+          }}
+          onTouchEnd={() => {
             setisResizing(false);
           }}
           style={{

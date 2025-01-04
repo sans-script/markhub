@@ -29,7 +29,7 @@ const Editor = ({
       const percentage =
         (newWidth / (window.innerWidth - sidebarWidthPx)) * 100;
 
-      if (percentage >= 10 && percentage <= 90) {
+      if (percentage >= 0 && percentage <= 90) {
         setEditorWidth(percentage);
       }
     };
@@ -59,7 +59,7 @@ const Editor = ({
       const percentage =
         (newWidth / (window.innerWidth - sidebarWidthPx)) * 100;
 
-      if (percentage >= 10 && percentage <= 90) {
+      if (percentage >= 0 && percentage <= 90) {
         setEditorWidth(percentage);
       }
     };
@@ -129,13 +129,19 @@ const Editor = ({
       <div
         id="resize-handle-editor"
         onMouseDown={handleResizeSide}
-        onTouchStart={handleResizeSideTouch}
+        onTouchStart={(e) => {
+          handleResizeSideTouch(e);
+          setisResizing(true);
+        }}
+        onTouchEnd={() => {
+          setisResizing(false);
+        }}
         onMouseEnter={() => {
           setisResizing(true);
         }}
         onMouseLeave={() => {
           setisResizing(false);
-        }}
+        }}        
         style={{
           position: "absolute",
           top: 0,

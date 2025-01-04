@@ -88,11 +88,17 @@ const Sidebar = ({ sidebarWidth, setSidebarWidth, isTransitioning }) => {
       <div
         id="resize-handle-sidebar"
         onMouseDown={handleResize}
-        onTouchStart={handleResizeTouch}
+        onTouchStart={(e) => {
+          handleResizeTouch(e);
+          setisResizing(true);
+        }}
         onMouseEnter={() => {
           setisResizing(true);
         }}
         onMouseLeave={() => {
+          setisResizing(false);
+        }}
+        onTouchEnd={() => {
           setisResizing(false);
         }}
         style={{
