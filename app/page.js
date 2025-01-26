@@ -155,23 +155,23 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const observer = new MutationObserver(() => {
-      document.querySelectorAll("pre").forEach((element) => {
-        const codeElement = element.querySelector("code");
-        if (codeElement) {
-          if (codeElement.classList.contains("language-mermaid")) {
-            element.style.backgroundColor = "white";
-          } else {
-            element.style.backgroundColor = "";
+    if (typeof document !== "undefined") {
+      const observer = new MutationObserver(() => {
+        document.querySelectorAll("pre").forEach((element) => {
+          const codeElement = element.querySelector("code");
+          if (codeElement) {
+            if (codeElement.classList.contains("language-mermaid")) {
+              element.style.backgroundColor = "white";
+            } else {
+              element.style.backgroundColor = "";
+            }
           }
-        }
+        });
       });
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
+      if (typeof document !== "undefined") {
+        observer.observe(document.body, { childList: true, subtree: true });
+      }
+    }
 
     return () => observer.disconnect();
   }, []);

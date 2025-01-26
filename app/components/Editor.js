@@ -20,7 +20,9 @@ const Editor = ({
     const startWidth = editorDivRef.current.offsetWidth;
     const sidebarWidthPx = (sidebarWidth / 100) * window.innerWidth;
 
-    document.body.style.cursor = "ew-resize";
+    if (typeof document !== "undefined") {
+      document.body.style.cursor = "ew-resize";
+    }
 
     const onMouseMove = (e) => {
       setisResizing(true);
@@ -36,13 +38,16 @@ const Editor = ({
 
     const onMouseUp = () => {
       setisResizing(false);
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-      document.body.style.cursor = "default";
+      if (typeof document !== "undefined") {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        document.body.style.cursor = "default";
+      }
     };
-
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
+    if (typeof document !== "undefined") {
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    }
   };
 
   const handleResizeSideTouch = (e) => {
@@ -52,7 +57,9 @@ const Editor = ({
     const startWidth = editorDivRef.current.offsetWidth;
     const sidebarWidthPx = (sidebarWidth / 100) * window.innerWidth;
 
-    document.body.style.cursor = "ew-resize";
+    if (typeof document !== "undefined") {
+      document.body.style.cursor = "ew-resize";
+    }
 
     const onTouchMove = (e) => {
       const newWidth = startWidth + (e.touches[0].clientX - startX);
@@ -65,14 +72,17 @@ const Editor = ({
     };
 
     const onTouchEnd = () => {
-      document.removeEventListener("touchmove", onTouchMove);
-      document.removeEventListener("touchend", onTouchEnd);
-      document.body.style.cursor = "default";
+      if (typeof document !== "undefined") {
+        document.removeEventListener("touchmove", onTouchMove);
+        document.removeEventListener("touchend", onTouchEnd);
+        document.body.style.cursor = "default";
+      }
       updateHandleColor();
     };
-
-    document.addEventListener("touchmove", onTouchMove);
-    document.addEventListener("touchend", onTouchEnd);
+    if (typeof document !== "undefined") {
+      document.addEventListener("touchmove", onTouchMove);
+      document.addEventListener("touchend", onTouchEnd);
+    }
   };
 
   return (
@@ -141,7 +151,7 @@ const Editor = ({
         }}
         onMouseLeave={() => {
           setisResizing(false);
-        }}        
+        }}
         style={{
           position: "absolute",
           top: 0,
