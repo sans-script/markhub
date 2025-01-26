@@ -21,12 +21,21 @@ const Preview = ({ input, editorWidth, bottomDivHeight, isTransitioning }) => {
 
     return text;
   }
+  function convertMermaidSyntax(text) {
+
+    text = text.replace(/```mermaid(?![\s\S]*```)/g, "```text");
+    text = text.replace(/```mermaid\s*```/g, "```text \n```");
+
+    return text;
+  }
+
+  const processedInput = convertLatexSyntax(convertMermaidSyntax(input));
   return (
     <div
       style={{
         width: `${100 - editorWidth}%`,
         height: `${100 - bottomDivHeight}%`,
-        padding: "0px 10px",
+        padding: "5px 10px",
         overflowX: "hidden",
         overflowY: "auto",
         display: `${editorWidth > 99 ? "none" : "inline"}`,
@@ -49,7 +58,7 @@ const Preview = ({ input, editorWidth, bottomDivHeight, isTransitioning }) => {
           rehypeStringify,
         ]}
       >
-        {convertLatexSyntax(input)}
+        {processedInput}
       </ReactMarkdown>
     </div>
   );
