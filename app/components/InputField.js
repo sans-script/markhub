@@ -75,7 +75,7 @@ const InputField = ({
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && e.shiftKey) {
+    if (e.key === "Enter" && e.ctrlKey) {
       e.preventDefault();
       if (prompt.trim() === "") {
         return;
@@ -84,6 +84,7 @@ const InputField = ({
       setPrompt("");
     }
   };
+  
 
   return (
     <div
@@ -104,7 +105,7 @@ const InputField = ({
         }}
       >
         <textarea
-          placeholder="Type your prompt here and press Shift + Enter to send..."
+          placeholder="Type your prompt here and press Ctrl + Enter to send"
           value={prompt}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
