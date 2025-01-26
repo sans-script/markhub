@@ -145,7 +145,7 @@ const Editor = ({
         style={{
           position: "absolute",
           top: 0,
-          right: 12,
+          right: 11,
           bottom: 0,
           width: "4px",
           cursor: "ew-resize",
