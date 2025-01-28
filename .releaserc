@@ -1,5 +1,6 @@
 {
   "branches": ["main", "next"],
+  "repositoryUrl": "https://github.com/sans-script/markhub",
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
