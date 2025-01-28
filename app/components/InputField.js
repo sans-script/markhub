@@ -17,9 +17,7 @@ const InputField = ({
     const startY = e.clientY;
     const startHeight = bottomDivRef.current.offsetHeight;
 
-    if (typeof document !== "undefined") {
-      document.body.style.cursor = "ns-resize";
-    }
+    document.body.style.cursor = "ns-resize";
 
     const onMouseMove = (e) => {
       setisResizing(true);
@@ -33,16 +31,13 @@ const InputField = ({
 
     const onMouseUp = () => {
       setisResizing(false);
-      if (typeof document !== "undefined") {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        document.body.style.cursor = "default";
-      }
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+      document.body.style.cursor = "default";
     };
-    if (typeof document !== "undefined") {
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    }
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
   };
 
   const handleResizeBottomTouch = (e) => {
@@ -51,9 +46,8 @@ const InputField = ({
     const totalHeight = window.innerHeight;
     const startY = e.touches[0].clientY;
     const startHeight = bottomDivRef.current.offsetHeight;
-    if (typeof document !== "undefined") {
-      document.body.style.cursor = "ns-resize";
-    }
+
+    document.body.style.cursor = "ns-resize";
 
     const onTouchMove = (e) => {
       setisResizing(true);
@@ -67,16 +61,13 @@ const InputField = ({
 
     const onTouchEnd = () => {
       setisResizing(false);
-      if (typeof document !== "undefined") {
-        document.removeEventListener("touchmove", onTouchMove);
-        document.removeEventListener("touchend", onTouchEnd);
-        document.body.style.cursor = "default";
-      }
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("touchend", onTouchEnd);
+      document.body.style.cursor = "default";
     };
-    if (typeof document !== "undefined") {
-      document.addEventListener("touchmove", onTouchMove);
-      document.addEventListener("touchend", onTouchEnd);
-    }
+
+    document.addEventListener("touchmove", onTouchMove);
+    document.addEventListener("touchend", onTouchEnd);
   };
 
   const handleChange = (e) => {
