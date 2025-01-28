@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Menu from "./components/Menu";
 import Editor from "./components/Editor";
 import Preview from "./components/Preview";
@@ -155,23 +155,23 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (typeof document !== "undefined") {
-      const observer = new MutationObserver(() => {
-        document.querySelectorAll("pre").forEach((element) => {
-          const codeElement = element.querySelector("code");
-          if (codeElement) {
-            if (codeElement.classList.contains("language-mermaid")) {
-              element.style.backgroundColor = "white";
-            } else {
-              element.style.backgroundColor = "";
-            }
+    const observer = new MutationObserver(() => {
+      document.querySelectorAll("pre").forEach((element) => {
+        const codeElement = element.querySelector("code");
+        if (codeElement) {
+          if (codeElement.classList.contains("language-mermaid")) {
+            element.style.backgroundColor = "white";
+          } else {
+            element.style.backgroundColor = "";
           }
-        });
+        }
       });
-      if (typeof document !== "undefined") {
-        observer.observe(document.body, { childList: true, subtree: true });
-      }
-    }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     return () => observer.disconnect();
   }, []);
