@@ -9,9 +9,8 @@ const Sidebar = ({ sidebarWidth, setSidebarWidth, isTransitioning }) => {
 
     const startX = e.clientX;
     const startWidth = sidebarDivRef.current.offsetWidth;
-    if (typeof document !== "undefined") {
-      document.body.style.cursor = "ew-resize";
-    }
+
+    document.body.style.cursor = "ew-resize";
 
     const onMouseMove = (e) => {
       setisResizing(true);
@@ -25,16 +24,13 @@ const Sidebar = ({ sidebarWidth, setSidebarWidth, isTransitioning }) => {
 
     const onMouseUp = () => {
       setisResizing(false);
-      if (typeof document !== "undefined") {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        document.body.style.cursor = "default";
-      }
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+      document.body.style.cursor = "default";
     };
-    if (typeof document !== "undefined") {
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    }
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
   };
 
   const handleResizeTouch = (e) => {
@@ -42,9 +38,8 @@ const Sidebar = ({ sidebarWidth, setSidebarWidth, isTransitioning }) => {
 
     const startX = e.touches[0].clientX;
     const startWidth = sidebarDivRef.current.offsetWidth;
-    if (typeof document !== "undefined") {
-      document.body.style.cursor = "ew-resize";
-    }
+
+    document.body.style.cursor = "ew-resize";
 
     const onTouchMove = (e) => {
       setisResizing(true);
@@ -58,16 +53,13 @@ const Sidebar = ({ sidebarWidth, setSidebarWidth, isTransitioning }) => {
 
     const onTouchEnd = () => {
       setisResizing(false);
-      if (typeof document !== "undefined") {
-        document.removeEventListener("touchmove", onTouchMove);
-        document.removeEventListener("touchend", onTouchEnd);
-        document.body.style.cursor = "default";
-      }
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("touchend", onTouchEnd);
+      document.body.style.cursor = "default";
     };
-    if (typeof document !== "undefined") {
-      document.addEventListener("touchmove", onTouchMove);
-      document.addEventListener("touchend", onTouchEnd);
-    }
+
+    document.addEventListener("touchmove", onTouchMove);
+    document.addEventListener("touchend", onTouchEnd);
   };
 
   return (
