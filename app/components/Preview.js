@@ -22,7 +22,6 @@ const Preview = ({ input, editorWidth, bottomDivHeight, isTransitioning }) => {
     return text;
   }
   function convertMermaidSyntax(text) {
-
     text = text.replace(/```mermaid(?![\s\S]*```)/g, "```text");
     text = text.replace(/```mermaid\s*```/g, "```text \n```");
 
@@ -30,6 +29,9 @@ const Preview = ({ input, editorWidth, bottomDivHeight, isTransitioning }) => {
   }
 
   const processedInput = convertLatexSyntax(convertMermaidSyntax(input));
+
+  if (typeof window === "undefined") return null;
+
   return (
     <div
       style={{
