@@ -3,16 +3,28 @@ import React, { useState, useEffect } from "react";
 const Toast = ({ message, onClose, type }) => {
   const [isVisible, setIsVisible] = useState(true);
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
+
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 600);
+    };
+
+    window.addEventListener("resize", handleResize);
+
     const timer = setTimeout(() => {
       setIsVisible(false);
     }, 2000);
 
-    setTimeout(() => {
+    const closeTimer = setTimeout(() => {
       onClose();
     }, 2500);
 
-    return () => clearTimeout(timer);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timer);
+      clearTimeout(closeTimer);
+    };
   }, [onClose]);
 
   const styles = {
@@ -25,7 +37,7 @@ const Toast = ({ message, onClose, type }) => {
       color: "#fff",
     },
     common: {
-      position: "absolute",
+      position: "fixed",
       bottom: "20px",
       right: "20px",
       padding: "10px 20px",
@@ -35,6 +47,16 @@ const Toast = ({ message, onClose, type }) => {
       opacity: isVisible ? 1 : 0,
       transform: isVisible ? "translateY(0)" : "translateY(20px)",
       transition: "opacity 0.5s ease, transform 0.5s ease",
+      maxWidth: "300px",
+    },
+    responsive: {
+      right: "50%",
+      top: "40px",
+      maxHeight: "40px",
+      transform: isVisible ? "translate(50%, 0)" : "translate(50%, 20px)",
+      width: "80%",
+      maxWidth: "none",
+      fontSize: "14px",
     },
   };
 
@@ -45,6 +67,7 @@ const Toast = ({ message, onClose, type }) => {
       style={{
         ...styles.common,
         ...toastStyle,
+        ...(isMobile ? styles.responsive : {}),
       }}
     >
       {message}
