@@ -8,7 +8,17 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeRaw from "rehype-raw";
 import rehypeStringify from "rehype-stringify";
 
-const Preview = ({ input, editorWidth, bottomDivHeight, isTransitioning }) => {
+const Preview = ({
+  input,
+  editorWidth,
+  bottomDivHeight,
+  isTransitioning,
+  scrollPos,
+  setScrollPos,
+  setEditorScrollPos,
+}) => {
+
+
   function convertLatexSyntax(text) {
     text = text.replace(/\\\[\s*([\s\S]*?)\s*\\\]/g, (match, p1) => {
       const trimmed = p1.trim();
@@ -21,6 +31,7 @@ const Preview = ({ input, editorWidth, bottomDivHeight, isTransitioning }) => {
 
     return text;
   }
+
   function convertMermaidSyntax(text) {
     text = text.replace(/```mermaid(?![\s\S]*```)/g, "```text");
     text = text.replace(/```mermaid\s*```/g, "```text \n```");
@@ -28,7 +39,16 @@ const Preview = ({ input, editorWidth, bottomDivHeight, isTransitioning }) => {
     return text;
   }
 
-  const processedInput = convertLatexSyntax(convertMermaidSyntax(input));
+  function wrapMarkdownTableInDiv(text) {
+    const tableRegex = /(\|.*\|\n\|.*\|\n(\|.*\|\n)*)(\|.*\|.*\n?)/g;
+    text = text.replace(tableRegex, (match) => {
+      return `<div style="display:flex; justify-content:center; width: 100%;">\n\n${match}\n\n</div>`;
+    });
+
+    return text;
+  }
+
+  const processedInput = convertLatexSyntax(convertMermaidSyntax(wrapMarkdownTableInDiv(input)));
 
   if (typeof window === "undefined") return null;
 
@@ -47,6 +67,18 @@ const Preview = ({ input, editorWidth, bottomDivHeight, isTransitioning }) => {
         transition: isTransitioning
           ? "width 0.1s ease, height 0.1s ease"
           : "none",
+      }}
+      ref={(div) => {
+        if (div) {
+          div.scrollTop = scrollPos;
+          setEditorScrollPos(div.scrollTop);
+        }
+      }}
+      onScroll={(e) => {
+        const newScrollPos = e.target.scrollTop;
+        if (Math.abs(newScrollPos - scrollPos) > 1) {
+          setScrollPos(newScrollPos);
+        }
       }}
     >
       <ReactMarkdown
