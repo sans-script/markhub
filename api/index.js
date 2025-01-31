@@ -36,6 +36,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/", (req, res) => {
+  res.send("Hello World!!");
+});
+
 app.post("/chat", async (req, res) => {
   try {
     const { message } = req.body;
