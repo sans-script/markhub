@@ -1,3 +1,23 @@
+# [1.1.0](https://github.com/sans-script/markhub/compare/v1.0.0...v1.1.0) (2025-01-31)
+
+
+### Bug Fixes
+
+* update sidebar content comment to english for better clarity ([d924b34](https://github.com/sans-script/markhub/commit/d924b34d424ca7810c9709a97bcabae4227ec578))
+
+
+### Features
+
+* add api with express and google generative ai integration ([d082e13](https://github.com/sans-script/markhub/commit/d082e13d4e158adf83166be569bfc38ad010195c))
+* add axios dependency to package.json and package-lock.json ([81664d4](https://github.com/sans-script/markhub/commit/81664d4bde2a906ed1f7320b6c927694f8aa17dc))
+* add custom hooks for managing editor dimensions, settings, status, and toast notifications ([333c2e2](https://github.com/sans-script/markhub/commit/333c2e24110177833eaa4e3521a74457ca30bfc7))
+* add toggle for typing effect in Menu component ([457d4d9](https://github.com/sans-script/markhub/commit/457d4d9bf164b4c32eb5114efbf32deae68b1f4e))
+* enhance editor component with scroll position synchronization and resizing improvements ([0e4634e](https://github.com/sans-script/markhub/commit/0e4634e91fba94810c4c4677cd7078d911487d5f))
+* enhance preview component with scroll position handling and wrap markdown tables in divs ([94d986c](https://github.com/sans-script/markhub/commit/94d986c7ec7d9ae550da9b6ee5c2c0d1370f674a))
+* enhance toast component with responsive design and improved visibility handling ([f07b3d1](https://github.com/sans-script/markhub/commit/f07b3d18691bd32f661f14d70ca1e5c2d4a6327b))
+* implement typing effect and error handling in InputField component with toast notifications ([729c517](https://github.com/sans-script/markhub/commit/729c51731d4ad4eb37a5031200e9ff9a52362404))
+* refactor Home component to use custom hooks for state management and improve toast notifications ([c52920c](https://github.com/sans-script/markhub/commit/c52920c253806c4f9480530771379130c9b5090f))
+
 # 1.0.0 (2025-01-28)
 
 
