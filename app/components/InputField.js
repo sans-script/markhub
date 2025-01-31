@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import useToast from "../hooks/useToast";
 
 const InputField = ({
   prompt,
@@ -6,9 +7,16 @@ const InputField = ({
   bottomDivHeight,
   setBottomDivHeight,
   isTransitioning,
+  setInput,
+  isTypingEffectEnabled,
+  setLoading,
 }) => {
   const bottomDivRef = useRef(null);
+  const timeoutRef = useRef(null);
+  const typingIndexRef = useRef(0);
+  const modelResponseRef = useRef("");
   const [isResizing, setisResizing] = useState();
+  const [showToastMessage, ToastComponent] = useToast();
 
   const handleResizeBottom = (e) => {
     e.preventDefault();
@@ -74,16 +82,96 @@ const InputField = ({
     setPrompt(e.target.value);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = async (e) => {
     if (e.key === "Enter" && e.ctrlKey) {
-      e.preventDefault();
-      if (prompt.trim() === "") {
-        return;
-      }
-      console.log(prompt);
       setPrompt("");
+      e.preventDefault();
+      if (prompt.trim() === "") return;
+
+      setLoading(true);
+
+      try {
+        const response = await fetch("http://localhost:5000/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: prompt }),
+        });
+
+        if (response.status === 503) {
+          showToastMessage(`${response.status} 🫠`, "error");
+          return;
+        }
+
+        const data = await response.json();
+        if (data.response) {
+          let modelResponse = data.response;
+
+          modelResponse = modelResponse.replace(
+            /\/\[([\s\S]*?)\/\]/g,
+            (match, content) => {
+              const processedContent = content.replace(/\//g, "\\");
+              const trimmedContent = processedContent
+                .split("\n")
+                .map((line) => line.trim())
+                .join("\n");
+              return `\\[\n${trimmedContent}\n\\]`;
+            }
+          );
+
+          modelResponse = modelResponse.replace(
+            /\/\(([\s\S]*?)\/\)/g,
+            (match, content) => {
+              const processedContent = content.replace(/\//g, "\\");
+              return `\\(${processedContent}\\)`;
+            }
+          );
+
+          modelResponseRef.current = modelResponse;
+          console.log(modelResponse);
+
+          if (isTypingEffectEnabled) {
+            const typeWriter = (text, index = 0) => {
+              if (index < text.length) {
+                setInput((prev) => prev + text.charAt(index));
+                typingIndexRef.current = index + 1;
+                timeoutRef.current = setTimeout(
+                  () => typeWriter(text, index + 1),
+                  8
+                );
+              }
+            };
+
+            setInput("");
+            typeWriter(modelResponse);
+          } else {
+            setInput(modelResponse);
+          }
+        }
+      } catch (error) {
+        console.error("Error sending message:", error);
+        showToastMessage(
+          "Error sending message: " + error.message + " 🫠",
+          "error"
+        );
+      } finally {
+        setLoading(false);
+      }
     }
   };
+
+  useEffect(() => {
+    if (!isTypingEffectEnabled) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        const remainingText = modelResponseRef.current.slice(
+          typingIndexRef.current
+        );
+        setInput((prev) => prev + remainingText);
+      }
+      typingIndexRef.current = 0;
+      modelResponseRef.current = "";
+    }
+  }, [isTypingEffectEnabled, setInput]);
 
   return (
     <div
@@ -156,6 +244,7 @@ const InputField = ({
           }}
         ></div>
       </div>
+      {ToastComponent}
     </div>
   );
 };
