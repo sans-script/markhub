@@ -7,6 +7,8 @@ const Menu = ({
   toggleSidebar,
   saveAsMarkdown,
   openMarkdownFile,
+  isTypingEffectEnabled,
+  toggleTypingEffect,
 }) => {
   return (
     <div
@@ -96,6 +98,18 @@ const Menu = ({
         onMouseLeave={(e) => (e.target.style.color = "inherit")}
       >
         Sidebar
+      </p>
+      <p
+        style={{
+          fontSize: "12px",
+          cursor: "pointer",
+          transition: "color 0.3s",
+        }}
+        onClick={toggleTypingEffect}
+        onMouseEnter={(e) => (e.target.style.color = "#007bff")}
+        onMouseLeave={(e) => (e.target.style.color = "inherit")}
+      >
+        {isTypingEffectEnabled ? "Disable" : "Enable"} Typing Effect
       </p>
     </div>
   );
