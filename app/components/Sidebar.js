@@ -78,7 +78,7 @@ const Sidebar = ({ sidebarWidth, setSidebarWidth, isTransitioning }) => {
         boxSizing: "border-box",
       }}
     >
-      {/* Conteúdo da Sidebar */}
+      {/* Sidebar Content */}
       <div style={{ padding: "10px", color: "#ECEFF4" }}>
         <h3>Sidebar</h3>
         <p>Isso vai ser a minha Sidebar :D</p>
