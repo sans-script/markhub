@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/sans-script/markhub/compare/v1.1.0...v1.2.0) (2025-01-31)
+
+
+### Features
+
+* add Hello World endpoint and configure Vercel deployment ([304a363](https://github.com/sans-script/markhub/commit/304a3638b629abce47e1a0a1c753ca5d9f0c8d2c))
+
 # [1.1.0](https://github.com/sans-script/markhub/compare/v1.0.0...v1.1.0) (2025-01-31)
 
 
