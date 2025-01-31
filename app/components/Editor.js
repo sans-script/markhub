@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
 
 const Editor = ({
@@ -9,8 +9,12 @@ const Editor = ({
   setEditorWidth,
   isTransitioning,
   sidebarWidth,
+  scrollPos,
+  setScrollPos,
+  editorScrollPos,
 }) => {
   const editorDivRef = useRef(null);
+  const editorRef = useRef(null);
   const [isResizing, setisResizing] = useState();
 
   const handleResizeSide = (e) => {
@@ -75,6 +79,22 @@ const Editor = ({
     document.addEventListener("touchend", onTouchEnd);
   };
 
+  useEffect(() => {
+    const updateScroll = () => {
+      if (editorRef.current) {
+        const currentScrollPos = editorRef.current.getScrollTop();
+        if (Math.abs(currentScrollPos - scrollPos) > 1) {
+          editorRef.current.setScrollPosition({
+            scrollTop: scrollPos,
+          });
+        }
+      }
+    };
+
+    const frameId = requestAnimationFrame(updateScroll);
+    return () => cancelAnimationFrame(frameId);
+  }, [scrollPos]);
+
   return (
     <div
       ref={editorDivRef}
@@ -122,7 +142,18 @@ const Editor = ({
           editor.updateOptions({
             theme: "github-dark",
           });
-          editor.layout();
+
+          editor.setScrollPosition({
+            scrollTop: editorScrollPos,
+          });
+
+          editor.onDidScrollChange((e) => {
+            if (e.scrollTop !== scrollPos) {
+              setScrollPos(e.scrollTop);
+            }
+          });
+
+          editorRef.current = editor;
         }}
       />
       {/* Resize Handle */}
