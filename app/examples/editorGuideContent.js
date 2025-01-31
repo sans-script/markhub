@@ -25,15 +25,15 @@ Make sure to write the right mermaid syntax
 
 Mathematical expressions are rendered using /(/LaTeX/), allowing you to easily display complex formulas. You can use LaTeX to represent algebraic, calculus, or statistical equations. For example, the quadratic formula:
 
-$$
+/[
 x = /frac{-b /pm /sqrt{b^2 - 4ac}}{2a}
-$$
+/]
 
 Additionally, you can represent integrals and other advanced mathematical concepts. For instance, the formula for the definite integral:
 
-$$
+/[
 /int_a^b f(x) /, dx = F(b) - F(a)
-$$
+/]
 
 ## Tables
 
