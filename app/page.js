@@ -1,67 +1,90 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Menu from "./components/Menu";
 import Editor from "./components/Editor";
 import Preview from "./components/Preview";
 import InputField from "./components/InputField";
+import Sidebar from "./components/Sidebar";
+import ErrorBoundary from "./utils/ErrorBoundary";
+import useDimensions from "./hooks/useDimensions";
+import useEditorSettings from "./hooks/useEditorSettings";
+import useStatus from "./hooks/useStatus";
+import editorGuideContent from "./examples/editorGuideContent";
+import useToast from "./hooks/useToast";
 import "highlight.js/styles/github-dark.css";
 import "github-markdown-css";
-import Sidebar from "./components/Sidebar";
-import Toast from "./components/Toast";
-import ErrorBoundary from "./utils/ErrorBoundary";
-import editorGuideContent from "./examples/editorGuideContent";
 
 export default function Home() {
-  const [input, setInput] = useState(editorGuideContent);
-  const [editorWidth, setEditorWidth] = useState(50);
-  const [bottomDivHeight, setBottomDivHeight] = useState(20);
-  const [sidebarWidth, setSidebarWidth] = useState(3);
-  const [prompt, setPrompt] = useState("");
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("");
-  const [errorKey, setErrorKey] = useState(0);
+  const editorContent = editorGuideContent;
+
+  const {
+    editorWidth,
+    setEditorWidth,
+    bottomDivHeight,
+    setBottomDivHeight,
+    sidebarWidth,
+    setSidebarWidth,
+  } = useDimensions();
+
+  const {
+    input,
+    setInput,
+    prompt,
+    setPrompt,
+    isTypingEffectEnabled,
+    setTypingEffectEnabled,
+    scrollPos,
+    setScrollPos,
+    editorScrollPos,
+    setEditorScrollPos,
+  } = useEditorSettings(editorContent);
+
+  const {
+    isTransitioning,
+    setIsTransitioning,
+    errorKey,
+    setErrorKey,
+    loading,
+    setLoading,
+  } = useStatus();
+
+  const [showToastMessage, ToastComponent] = useToast();
+
+  const toggleTypingEffect = () => {
+    setTypingEffectEnabled((prev) => !prev);
+  };
 
   const toggleEditor = () => {
     setIsTransitioning(true);
-
     setEditorWidth(100);
-
     if (bottomDivHeight > 20) {
       setBottomDivHeight(20);
     }
     if (editorWidth === 100) {
       setEditorWidth(50);
     }
-
     setTimeout(() => setIsTransitioning(false), 100);
   };
 
   const togglePreview = () => {
     setIsTransitioning(true);
-
     setEditorWidth(0);
-
     if (bottomDivHeight > 20) {
       setBottomDivHeight(20);
     }
-
     if (editorWidth === 0) {
       setEditorWidth(50);
     }
-
     setTimeout(() => setIsTransitioning(false), 100);
   };
 
   const toggleInput = () => {
     setIsTransitioning(true);
-
     setBottomDivHeight(100);
     if (bottomDivHeight === 100) {
       setBottomDivHeight(20);
     }
-
     setTimeout(() => setIsTransitioning(false), 100);
   };
 
@@ -77,10 +100,11 @@ export default function Home() {
   const saveAsMarkdown = async () => {
     try {
       if (!input || input.trim() === "") {
-        setToastMessage(
-          "Cannot save an empty file. Please add content before saving."
+        showToastMessage(
+          "Why should I save an empty file??? 🤨 \n Please add content before saving!",
+          "error"
         );
-        setToastType("error");
+
         return;
       }
 
@@ -98,20 +122,13 @@ export default function Home() {
       await writable.write(input);
       await writable.close();
 
-      setToastMessage("File saved successfully!");
-      setToastType("success");
+      showToastMessage("File saved successfully!", "success");
     } catch (error) {
       if (error.name !== "AbortError") {
         console.error("Error saving the file:", error);
-        setToastMessage("An error occurred while saving the file.");
-        setToastType("error");
+        showToastMessage("An error occurred while saving the file.", "error");
       }
     }
-  };
-
-  const handleCloseToast = () => {
-    setToastMessage("");
-    setToastType("");
   };
 
   const openMarkdownFile = async () => {
@@ -130,28 +147,34 @@ export default function Home() {
       const content = await file.text();
 
       if (content.trim() === "") {
-        setToastMessage("The file is empty.");
-        setToastType("error");
+        showToastMessage("The file is empty 😐\n", "error");
         return;
       }
-
-      setInput(content);
-      setToastMessage(`File "${file.name}" loaded successfully!`);
-      setToastType("success");
+      if (content == input) {
+        showToastMessage("The file is already open 😐\n", "info");
+      } else {
+        setInput(content);
+        showToastMessage(
+          `File "${file.name}" loaded successfully! 😀`,
+          "success"
+        );
+      }
     } catch (error) {
       if (error.name === "AbortError") {
         console.log("File selection was canceled.");
       } else {
         console.error("Error opening the file:", error);
-        setToastMessage("An error occurred while opening the file.");
-        setToastType("error");
+        showToastMessage(
+          "An error occurred while opening the file 😭\n",
+          "error"
+        );
       }
     }
   };
 
   const handleInputChange = (newInput) => {
     setInput(newInput);
-    setErrorKey((prevKey) => prevKey + 1); // Atualiza o erroKey para forçar re-renderização
+    setErrorKey((prevKey) => prevKey + 1);
   };
 
   useEffect(() => {
@@ -186,6 +209,42 @@ export default function Home() {
         overflow: "hidden",
       }}
     >
+      {/* Overlay de Fallback */}
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.75)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "24px",
+            fontWeight: "bold",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              background:
+                "linear-gradient(90deg, transparent, white, transparent)",
+              backgroundSize: "200% 100%",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              color: "transparent",
+              animation: "spotlight 3s linear infinite",
+            }}
+          >
+            Mr. Magic is doing Magic ✨
+          </div>
+        </div>
+      )}
+
       {/* Menu */}
       <Menu
         toggleEditor={toggleEditor}
@@ -194,6 +253,8 @@ export default function Home() {
         toggleSidebar={toggleSidebar}
         saveAsMarkdown={saveAsMarkdown}
         openMarkdownFile={openMarkdownFile}
+        isTypingEffectEnabled={isTypingEffectEnabled}
+        toggleTypingEffect={toggleTypingEffect}
       />
 
       <div
@@ -232,6 +293,10 @@ export default function Home() {
               isTransitioning={isTransitioning}
               setEditorWidth={setEditorWidth}
               sidebarWidth={sidebarWidth}
+              scrollPos={scrollPos}
+              setScrollPos={setScrollPos}
+              editorScrollPos={editorScrollPos}
+              setEditorScrollPos={setEditorScrollPos}
             />
 
             {/* Preview Container */}
@@ -241,6 +306,10 @@ export default function Home() {
                 editorWidth={editorWidth}
                 bottomDivHeight={bottomDivHeight}
                 isTransitioning={isTransitioning}
+                scrollPos={scrollPos}
+                setScrollPos={setScrollPos}
+                editorScrollPos={editorScrollPos}
+                setEditorScrollPos={setEditorScrollPos}
               />
             </ErrorBoundary>
           </div>
@@ -252,17 +321,15 @@ export default function Home() {
             bottomDivHeight={bottomDivHeight}
             setBottomDivHeight={setBottomDivHeight}
             isTransitioning={isTransitioning}
+            setInput={setInput}
+            setTypingEffectEnabled={setTypingEffectEnabled}
+            isTypingEffectEnabled={isTypingEffectEnabled}
+            input={input}
+            setLoading={setLoading}
           />
-
-          {toastMessage && (
-            <Toast
-              message={toastMessage}
-              onClose={handleCloseToast}
-              type={toastType}
-            />
-          )}
         </div>
       </div>
+      {ToastComponent}
     </div>
   );
 }
