@@ -1,3 +1,19 @@
+# [1.3.0](https://github.com/sans-script/markhub/compare/v1.2.0...v1.3.0) (2025-02-01)
+
+
+### Bug Fixes
+
+* correct CSS syntax for scrollbar thumb hover state ([5acbed4](https://github.com/sans-script/markhub/commit/5acbed400d991f5b3e38a4d2507db3247809905e))
+
+
+### Features
+
+* add dynamic page component to render home with fileId from params ([31afb5d](https://github.com/sans-script/markhub/commit/31afb5d439503a1e3f627bce423e433f84909fdf))
+* add persistent state management for editor dimensions using localStorage ([5b9b206](https://github.com/sans-script/markhub/commit/5b9b206c25bb1c1776faeedaf7ddfda0c7417d82))
+* enhance home component with loading overlay and ai-generated file naming ([e7b5bc9](https://github.com/sans-script/markhub/commit/e7b5bc939422ce210c7f72aa5f96567830741afb))
+* implement file loading and sidebar resizing functionality in Sidebar component ([b44c3f1](https://github.com/sans-script/markhub/commit/b44c3f17e3ef22ce931d4b27ef65c2421d40b7a6))
+* update metadata for improved SEO and add title and description tags ([fa35bbf](https://github.com/sans-script/markhub/commit/fa35bbf92734ae5ca427e312a2c26b3400b87d36))
+
 # [1.2.0](https://github.com/sans-script/markhub/compare/v1.1.0...v1.2.0) (2025-01-31)
 
 
