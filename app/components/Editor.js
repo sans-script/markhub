@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
 
 const Editor = ({
@@ -79,21 +79,21 @@ const Editor = ({
     document.addEventListener("touchend", onTouchEnd);
   };
 
-  useEffect(() => {
-    const updateScroll = () => {
-      if (editorRef.current) {
-        const currentScrollPos = editorRef.current.getScrollTop();
-        if (Math.abs(currentScrollPos - scrollPos) > 1) {
-          editorRef.current.setScrollPosition({
-            scrollTop: scrollPos,
-          });
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const updateScroll = () => {
+  //     if (editorRef.current) {
+  //       const currentScrollPos = editorRef.current.getScrollTop();
+  //       if (Math.abs(currentScrollPos - scrollPos) > 1) {
+  //         editorRef.current.setScrollPosition({
+  //           scrollTop: scrollPos,
+  //         });
+  //       }
+  //     }
+  //   };
 
-    const frameId = requestAnimationFrame(updateScroll);
-    return () => cancelAnimationFrame(frameId);
-  }, [scrollPos]);
+  //   const frameId = requestAnimationFrame(updateScroll);
+  //   return () => cancelAnimationFrame(frameId);
+  // }, [scrollPos]);
 
   return (
     <div
