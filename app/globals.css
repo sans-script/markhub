@@ -15,8 +15,8 @@ pre {
   background-color: hsla(0, 0%, 27%, 0.75);
 }
 ::-webkit-scrollbar-thumb:hover {
-    background-color: hsla(0, 0%, 27%, 1);
-  }
+  background-color: hsla(0, 0%, 27%, 1);
+}
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #555;
